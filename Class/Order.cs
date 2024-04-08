@@ -15,7 +15,7 @@
         public Order(int id, List<Product> products, string? customerName, string? customerSurname, string? customerAddress, string? deliveryOption, string? paymentOption, double totalPrice, DateOnly orderDate)
         {
             Id = id;
-            Products = products;
+            Products = products ?? new List<Product>();
             CustomerName = customerName;
             CustomerSurname = customerSurname;
             CustomerAddress = customerAddress;
@@ -25,6 +25,7 @@
             OrderDate = orderDate;
         }
 
+        public Order() { }
 
         public void AddProduct(Product product)
         {

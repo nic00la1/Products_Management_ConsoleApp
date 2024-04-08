@@ -11,6 +11,8 @@ namespace Products_Management_ConsoleApp.Class
         public int Quantity { get; set; }
         public DateOnly DeliveryDate { get; set; }
 
+        public Product() { }
+
         public Product(int id, string? name, string? brand, double price, string? category, int quantity, DateOnly deliveryDate)
         {
             Id = id;
