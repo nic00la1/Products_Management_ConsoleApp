@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Products_Management_ConsoleApp.Class
 {
     public class Product
@@ -15,5 +10,16 @@ namespace Products_Management_ConsoleApp.Class
         public string? Category { get; set; }
         public int Quantity { get; set; }
         public DateOnly DeliveryDate { get; set; }
+
+        public Product(int id, string? name, string? brand, double price, string? category, int quantity, DateOnly deliveryDate)
+        {
+            Id = id;
+            Name = name;
+            Brand = brand;
+            Price = price;
+            Category = category;
+            Quantity = quantity;
+            DeliveryDate = deliveryDate;
+        }
     }
 }
