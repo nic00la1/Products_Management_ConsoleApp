@@ -7,12 +7,12 @@
         public string? CustomerName { get; set; }
         public string? CustomerSurname { get; set; }
         public string? CustomerAddress { get; set; }
-        public string? DeliveryOption { get; set; }
-        public string? PaymentOption { get; set; }
+        public int DeliveryOption { get; set; }
+        public int PaymentOption { get; set; }
         public double TotalPrice { get; set; }
         public DateOnly OrderDate { get; set; }
 
-        public Order(int id, List<Product> products, string? customerName, string? customerSurname, string? customerAddress, string? deliveryOption, string? paymentOption, double totalPrice, DateOnly orderDate)
+        public Order(int id, List<Product> products, string? customerName, string? customerSurname, string? customerAddress, int deliveryOption, int paymentOption, double totalPrice, DateOnly orderDate)
         {
             Id = id;
             Products = products ?? new List<Product>();
@@ -25,23 +25,42 @@
             OrderDate = orderDate;
         }
 
-        public Order() { }
+        public Order(int v)
+        {
+            Products = new List<Product>();
+        }
 
         public void AddProduct(Product product)
         {
             Products.Add(product);
         }
 
-        public void CalculateTotalCost()
+        public double CalculateTotalCost()
         {
             double totalCost = 0;
 
-            if (DeliveryOption == "odbior osobisty") totalCost += 0;
-            if (DeliveryOption == "paczkomat") totalCost += 10;
-            if (DeliveryOption == "kurier") totalCost += 20;
+            switch (DeliveryOption)
+            {
+                case 1: // odbior osobisty
+                    totalCost += 0;
+                    break;
+                case 2: // paczkomat
+                    totalCost += 10;
+                    break;
+                case 3: // kurier
+                    totalCost += 20;
+                    break;
+            }
 
-            if (PaymentOption == "karta") totalCost += 2;
-            if (PaymentOption == "gotowka") totalCost += 0;
+            switch (PaymentOption)
+            {
+                case 1: // karta
+                    totalCost += 2;
+                    break;
+                case 2: // gotowka
+                    totalCost += 0;
+                    break;
+            }
 
             foreach (var product in Products) // Dla każdego produktu w zamówieniu dodajemy jego cenę do całkowitej ceny zamówienia
             {
@@ -49,6 +68,8 @@
             }
 
             totalCost = Math.Round(totalCost, 2); // Zaokrąglamy ostateczną cenę do dwóch miejsc po przecinku
+
+            return totalCost;
         }
     }
 }

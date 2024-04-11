@@ -5,74 +5,90 @@ namespace Products_Management_ConsoleApp
 {
     class Program
     {
-        public static List<Order> Orders;
-        public static Order order;
-        public static List<Product> Products;
-        public static string pathDummyData = "C:\\Users\\Admin\\Source\\Repos\\nic00la1\\Products_Management_ConsoleApp\\ProductsDummyData\\produkty.json";
-        public static string jsonProducts = File.ReadAllText(pathDummyData); // Odczytujemy plik JSON z danymi produktów
-        public static List<Product> products = JsonSerializer.Deserialize<List<Product>>(jsonProducts); // Deserializujemy dane produktów z JSONa do listy produktów
+        public static List<Order> orders;
+        static string ordersPath = @"C:\Users\Admin\Source\Repos\nic00la1\Products_Management_ConsoleApp\ProductsDummyData\zamowienia.json";
+        static string productsPath = @"C:\Users\Admin\Source\Repos\nic00la1\Products_Management_ConsoleApp\ProductsDummyData\produkty.json";
 
         static void Main(string[] args)
         {
-            while (true) // Jeśli chcemy, aby program działał w nieskończoność
+            try
             {
-                // Showing the Menu 
-                Console.WriteLine("Witaj w Zarzadzaniu Produktami!");
-                Console.WriteLine("1. Stwórz nowe zamówienie");
-                Console.WriteLine("2. Wyswietl Zamowienia");
-                Console.WriteLine("3. Wyjdź");
+                if (!File.Exists(productsPath))
+                {
+                    File.Create(productsPath).Close(); // Utworz produkty.json jesli nie istnieje
+                }
+                if (!File.Exists(ordersPath))
+                {
+                    File.Create(ordersPath).Close(); // Utworz zamowienia.json jesli nie istnieje
+                }
 
-                string option = Console.ReadLine();
+                string json = File.ReadAllText(ordersPath);
+                orders = JsonSerializer.Deserialize<List<Order>>(json);
 
-                switch (option)
+                Console.WriteLine("Witaj w programie zarządzania produktami!");
+                Console.WriteLine("1. Utworz zamowienie");
+                Console.WriteLine("2. Wyswietl zamowienia");
+                Console.WriteLine("3. Dodaj produkt do zamowienia");
+                Console.WriteLine("4. Wyjdz");
+
+                string choice = Console.ReadLine();
+
+                switch (choice)
                 {
                     case "1":
                         CreateOrder();
                         break;
                     case "2":
-                        DisplayOrders();
+                        ShowOrders();
                         break;
                     case "3":
-                        Console.WriteLine("Dziękujemy za skorzystanie z programu. Do zobaczenia!");
+                        AddProductToOrder();
+                        break;
+                    case "4":
                         return;
                     default:
-                        Console.Clear();
-                        Console.WriteLine("Nieprawidłowa opcja. Spróbuj ponownie.");
+                        Console.WriteLine("Niepoprawny wybor");
                         break;
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
-        static void CreateOrder()
+        private static void CreateOrder()
         {
             Console.Clear();
-
-            Console.WriteLine("Tworzenie nowego zamówienia...");
-            Console.WriteLine("Podaj swoje imię:");
+            Console.WriteLine("Utworz zamowienie\n");
+            Console.WriteLine("Podaj imie klienta");
             string name = Console.ReadLine();
 
-            Console.WriteLine("Podaj swoje nazwisko:");
+            Console.WriteLine("Podaj nazwisko klienta");
             string surname = Console.ReadLine();
 
-            Console.WriteLine("Podaj swój adres:");
+            Console.WriteLine("Podaj adres klienta");
             string address = Console.ReadLine();
 
-            Console.WriteLine("Wybierz sposób dostawy: (pisz z malej litery)");
-            Console.WriteLine("1. Kurier (cena - 20zl)");
-            Console.WriteLine("2. Paczkomat (cena - 10zl)");
-            Console.WriteLine("3. Odbiór osobisty (cena - 0zl)");
+            Console.WriteLine("Wybierz opcje dostawy");
+            Console.WriteLine("1. Odbior osobisty");
+            Console.WriteLine("2. Paczkomat");
+            Console.WriteLine("3. Kurier");
+            int deliveryOption = int.Parse(Console.ReadLine());
 
-            string deliveryOption = Console.ReadLine();
+            Console.WriteLine("Wybierz opcje platnosci");
+            Console.WriteLine("1. Karta");
+            Console.WriteLine("2. Gotowka");
+            int paymentOption = int.Parse(Console.ReadLine());
 
-            Console.WriteLine("Wybierz sposób płatności: (pisz z malej litery)");
-            Console.WriteLine("1. Karta (cena - 2zl)");
-            Console.WriteLine("2. Gotówka (cena - 0zl)");
+            Console.ReadKey();
+            List<Product> products;
 
-            string paymentOption = Console.ReadLine();
+            string json = File.ReadAllText(productsPath);
+            products = JsonSerializer.Deserialize<List<Product>>(json);
 
-
-            order = new Order(
-                Orders.Count + 1,
+            Order nowe_zamowienie = new Order(
+                orders.Count + 1,
                 products,
                 name,
                 surname,
@@ -81,66 +97,34 @@ namespace Products_Management_ConsoleApp
                 paymentOption,
                 0,
                 DateOnly.FromDateTime(DateTime.Now)
-            );
-
-            Console.WriteLine("Zamówienie zostało utworzone. Możesz teraz dodać produkty do zamówienia.");
-
-            while (true) // Petla ktora pozwala dodawac produkty do zamowienia
-            {
-                Console.Clear();
-                Console.WriteLine("Co chcesz zrobić? Wybierz opcję:");
-                Console.WriteLine("1. Dodaj produkt po ID");
-                Console.WriteLine("2. Wyswietl wszystkie produkty");
-                Console.WriteLine("3. Pokaz szczegoly zamowienia");
-                Console.WriteLine("4. Złóż zamówienie");
-
-                int option = Convert.ToInt16(Console.ReadLine());
-
-                switch (option)
-                {
-                    case 1:
-                        AddProductByID();
-                        break;
-                    case 2:
-                        DisplayAllProducts();
-                        break;
-                }
-            }
+             );
         }
 
-        static void AddProductByID()
-        {
-            Console.WriteLine("Podaj ID produktu, który chcesz dodać do zamówienia:");
-            int productId = Convert.ToInt16(Console.ReadLine());
-            Product product = products.FirstOrDefault(p => p.Id == productId); // Szukamy produktu o podanym ID
-
-            if (product != null) // Jeśli produkt o podanym ID istnieje, dodajemy go do zamówienia
-            {
-                order.AddProduct(product);
-                Console.WriteLine("Produkt został dodany do zamówienia.");
-            }
-            else
-            {
-                Console.WriteLine("Nie znaleziono produktu o podanym ID.");
-            }
-        }
-
-        static void DisplayAllProducts()
+        private static void ShowOrders()
         {
             Console.Clear();
+            Console.WriteLine("Zamowienia\n");
 
-            Console.WriteLine("Wszystkie produkty: ");
-            foreach (var product in products)
+            foreach (var order in orders)
             {
-                Console.WriteLine($"ID: {product.Id}, Nazwa: {product.Name}, Cena: {product.Price}");
+                Console.WriteLine($"Id: {order.Id}");
+                Console.WriteLine($"Imie: {order.CustomerName}");
+                Console.WriteLine($"Nazwisko: {order.CustomerSurname}");
+                Console.WriteLine($"Adres: {order.CustomerAddress}");
+                Console.WriteLine($"Opcja dostawy: {order.DeliveryOption}");
+                Console.WriteLine($"Opcja platnosci: {order.PaymentOption}");
+                Console.WriteLine($"Data zamowienia: {order.OrderDate}");
+                Console.WriteLine($"Cena calkowita: {order.TotalPrice}");
+                Console.WriteLine();
             }
         }
 
-        static void DisplayOrders()
+
+        private static void AddProductToOrder()
         {
             Console.Clear();
-
-            Console.WriteLine("Wszystkie zamowienia: ");
+            Console.WriteLine("Dodaj produkt do zamowienia\n");
         }
     }
 }
+
