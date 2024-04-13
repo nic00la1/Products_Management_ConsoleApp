@@ -16,6 +16,7 @@ namespace Products_Management_ConsoleApp.Class
                 {
                     File.Create(pathProdukty).Close();
                 }
+
                 if (!File.Exists(pathZamowienia))
                 {
                     File.Create(pathZamowienia).Close();
@@ -44,6 +45,15 @@ namespace Products_Management_ConsoleApp.Class
                 Console.WriteLine("Sposob platnosci: ");
                 Console.WriteLine("1. karta (2zl),\n2. gotowka (0zl)");
                 string sposobPlatnosci = Console.ReadLine();
+
+                // Jesli dane klienta sa puste to nie utworzy zamowienia
+                if (string.IsNullOrEmpty(imie) || string.IsNullOrEmpty(nazwisko) || string.IsNullOrEmpty(adres))
+                {
+                    Jesli_Blad();
+                    Console.WriteLine("Nie podano wszystkich danych klienta!");
+                    Console.ReadKey();
+                    return;
+                }
 
                 List<Produkt> produkty;
                 string jsonP = File.ReadAllText(pathProdukty);
@@ -96,6 +106,7 @@ namespace Products_Management_ConsoleApp.Class
                             ZlozZamowienie(nowe_zamowienie);
                             break;
                         default:
+                            Jesli_Blad();
                             Console.WriteLine("Nie ma takiej opcji");
                             break;
                     }
@@ -105,7 +116,9 @@ namespace Products_Management_ConsoleApp.Class
             }
             catch (Exception ex)
             {
+                Jesli_Blad();
                 Console.WriteLine(ex.Message);
+                Console.ReadKey();
             }
         }
 
@@ -114,9 +127,11 @@ namespace Products_Management_ConsoleApp.Class
             try
             {
                 // Sprawdz czy zamowienia istnieja
-                if (!File.Exists(pathZamowienia))
+                if (!File.Exists(pathZamowienia) || (File.ReadAllText(pathZamowienia) == "[]"))
                 {
-                    Console.WriteLine("Brak zamowien");
+                    Jesli_Blad();
+                    Console.WriteLine("Brak zamowien do wyswietlenia");
+                    Console.ReadKey();
                     return;
                 }
                 Console.WriteLine(">>> Wszystkie zamowienia <<<\n");
@@ -137,7 +152,9 @@ namespace Products_Management_ConsoleApp.Class
             }
             catch (Exception ex)
             {
+                Jesli_Blad();
                 Console.WriteLine(ex.Message);
+                Console.ReadKey();
             }
         }
 
@@ -158,6 +175,7 @@ namespace Products_Management_ConsoleApp.Class
                 }
                 else
                 {
+                    Jesli_Blad();
                     Console.WriteLine("Nie ma takiego produktu");
                     return;
                 }
@@ -179,6 +197,7 @@ namespace Products_Management_ConsoleApp.Class
             // Jesli nie ma produktow w zamowieniu
             if (nowe_zamowienie.Produkty.Count == 0)
             {
+                Jesli_Blad();
                 Console.WriteLine("Brak produktow w zamowieniu!");
                 return;
             }
@@ -200,7 +219,7 @@ namespace Products_Management_ConsoleApp.Class
             }
         }
 
-        public static void ZlozZamowienie(Zamowienie nowe_zamowienie)
+        private static void ZlozZamowienie(Zamowienie nowe_zamowienie)
         {
             try
             {
@@ -237,13 +256,22 @@ namespace Products_Management_ConsoleApp.Class
                 }
                 else
                 {
+                    Jesli_Blad();
                     Console.WriteLine("Zamowienie nie zostalo zlozone");
                 }
             }
             catch (Exception ex)
             {
+                Jesli_Blad();
                 Console.WriteLine(ex.Message);
+                Console.ReadKey();
             }
+        }
+
+        private static void Jesli_Blad()
+        {
+            // Wyswietlenie komunikatu w kolorze czerwonym
+            Console.ForegroundColor = ConsoleColor.Red;
         }
     }
 }
