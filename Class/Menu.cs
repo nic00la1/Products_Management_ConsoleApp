@@ -2,8 +2,7 @@
 {
     internal class Menu
     {
-        static string[] pozycjeMenu = { "Utworz zamowienie", "Dodaj produkt do zamowienia",
-                                       "Oblicz wartosc zamowienia", "Wyswietl szczegoly zamowienia",
+        static string[] pozycjeMenu = { "Utworz zamowienie", "Wyswietl Zamowienia",
                                         "Koniec"};
         static int aktywnaPozycjaMenu = 0;
 
@@ -77,21 +76,13 @@
             {
                 case 0:
                     Console.Clear();
-                    OpcjaWBudowie();
+                    TworzenieZamowienia.UtworzZamowienie();
                     break;
                 case 1:
                     Console.Clear();
-                    OpcjaWBudowie();
+                    TworzenieZamowienia.WyswietlWszystkieZamowienia();
                     break;
                 case 2:
-                    Console.Clear();
-                    OpcjaWBudowie();
-                    break;
-                case 3:
-                    Console.Clear();
-                    OpcjaWBudowie();
-                    break;
-                case 4:
                     Environment.Exit(0);
                     break;
             }
