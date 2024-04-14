@@ -38,13 +38,11 @@ namespace Products_Management_ConsoleApp.Class
                 Console.WriteLine("Adres: ");
                 string adres = Console.ReadLine();
 
-                Console.WriteLine("Sposob dostawy: ");
-                Console.WriteLine("1. kurier (20zl),\n2. odbior osobisty (0zl)");
-                string sposobDostawy = Console.ReadLine();
+                List<string> sposobyDostawy = new List<string> { "1. kurier (20zl)", "2. odbior osobisty (0zl)" };
+                string sposobDostawy = WybierzOpcje("Sposob dostawy: ", sposobyDostawy);
 
-                Console.WriteLine("Sposob platnosci: ");
-                Console.WriteLine("1. karta (2zl),\n2. gotowka (0zl)");
-                string sposobPlatnosci = Console.ReadLine();
+                List<string> sposobyPlatnosci = new List<string> { "1. karta (2zl)", "2. gotowka (0zl)" };
+                string sposobPlatnosci = WybierzOpcje("Sposob platnosci: ", sposobyPlatnosci);
 
                 // Jesli dane klienta sa puste to nie utworzy zamowienia
                 if (string.IsNullOrEmpty(imie) || string.IsNullOrEmpty(nazwisko) || string.IsNullOrEmpty(adres))
@@ -264,6 +262,46 @@ namespace Products_Management_ConsoleApp.Class
                 Jesli_Blad();
                 Console.WriteLine(ex.Message);
                 Console.ReadKey();
+            }
+        }
+
+        public static string WybierzOpcje(string prompt, List<string> options)
+        {
+            int selected = 0;
+
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine(prompt);
+
+                for (int i = 0; i < options.Count; i++)
+                {
+                    if (i == selected)
+                    {
+                        Console.Write(">> ");
+                    }
+                    else
+                    {
+                        Console.Write("   ");
+                    }
+
+                    Console.WriteLine(options[i]);
+                }
+
+                ConsoleKeyInfo keyInfo = Console.ReadKey();
+
+                if (keyInfo.Key == ConsoleKey.UpArrow)
+                {
+                    selected = (selected - 1 + options.Count) % options.Count;
+                }
+                else if (keyInfo.Key == ConsoleKey.DownArrow)
+                {
+                    selected = (selected + 1) % options.Count;
+                }
+                else if (keyInfo.Key == ConsoleKey.Enter)
+                {
+                    return options[selected].Split(' ')[1]; // Extracting the value from the selected option
+                }
             }
         }
 
