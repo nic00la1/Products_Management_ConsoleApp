@@ -106,7 +106,6 @@ namespace Products_Management_ConsoleApp.Class
                             ZlozZamowienie(nowe_zamowienie);
                             break;
                         default:
-                            Jesli_Blad();
                             Console.WriteLine("Nie ma takiej opcji");
                             break;
                     }
@@ -141,12 +140,44 @@ namespace Products_Management_ConsoleApp.Class
 
                 foreach (Zamowienie zamowienie in zamowienia)
                 {
-                    Console.WriteLine($"ID zamowienia: {zamowienie.Id}\n");
+                    Console.WriteLine("====================================");
+                    Console.WriteLine($" --- ID zamowienia: {zamowienie.Id} ---\n");
                     Console.WriteLine($"Klient: {zamowienie.DaneKupujacego.Imie} {zamowienie.DaneKupujacego.Nazwisko}");
                     Console.WriteLine($"Adres: {zamowienie.DaneKupujacego.Adres}");
                     Console.WriteLine($"Sposob dostawy: {zamowienie.SposobDostawy}");
                     Console.WriteLine($"Sposob platnosci: {zamowienie.SposobPlatnosci}");
-                    Console.WriteLine($"Kwota calkowita: {zamowienie.KwotaCalkowita}zł\n");
+                    double kwotaCalkowita = zamowienie.KwotaCalkowita;
+
+                    // Dodajemy koszt dostawy jeśli wybrano kuriera
+                    if (zamowienie.SposobDostawy == "1")
+                    {
+                        kwotaCalkowita += 20;
+                        Console.WriteLine("Koszt dostawy kurierem: 20zł");
+                    }
+                    else if (zamowienie.SposobDostawy == "2")
+                    {
+                        kwotaCalkowita += 0;
+                    }
+
+                    // Dodajemy koszt płatności kartą jeśli wybrano tę opcję
+                    if (zamowienie.SposobPlatnosci == "1")
+                    {
+                        kwotaCalkowita += 2;
+                        Console.WriteLine("Koszt płatności kartą: 2zł");
+                    }
+                    else if (zamowienie.SposobDostawy == "2")
+                    {
+                        kwotaCalkowita += 0;
+                    }
+
+                    Console.WriteLine($"Kwota calkowita: {kwotaCalkowita}zł\n");
+                    Console.WriteLine("Produkty w zamowieniu:");
+                    foreach (Produkt produkt in zamowienie.Produkty)
+                    {
+                        Console.WriteLine($"{produkt.Nazwa} - {produkt.Cena}zł");
+                    }
+
+                    Console.WriteLine("====================================");
                 }
                 Console.ReadKey();
             }
@@ -165,21 +196,25 @@ namespace Products_Management_ConsoleApp.Class
             Console.WriteLine("Podaj nazwe produktu");
             string tymczasowa_nazwa = Console.ReadLine();
 
+            bool produktZnaleziony = false; // flaga wskazująca, czy produkt został znaleziony
+
             foreach (Produkt produkt in produkty)
             {
                 if (tymczasowa_nazwa == produkt.Nazwa) // sprawdzenie czy produkt istnieje
                 {
                     nowe_zamowienie.DodajProdukt(produkt);
                     tymczasowa_nazwa = ""; // reset nazwy
+                    produktZnaleziony = true; // ustawienie flagi na true
                     Console.WriteLine("Dodano produkt do zamowienia");
-                }
-                else
-                {
-                    Jesli_Blad();
-                    Console.WriteLine("Nie ma takiego produktu");
-                    return;
+                    break; // przerwanie pętli po dodaniu produktu
                 }
             }
+
+            if (!produktZnaleziony) // jeśli produkt nie został znaleziony
+            {
+                Console.WriteLine("Nie ma takiego produktu!");
+            }
+
         }
 
         private static void WyswietlWszystkieProdukty(List<Produkt> produkty)
@@ -197,7 +232,6 @@ namespace Products_Management_ConsoleApp.Class
             // Jesli nie ma produktow w zamowieniu
             if (nowe_zamowienie.Produkty.Count == 0)
             {
-                Jesli_Blad();
                 Console.WriteLine("Brak produktow w zamowieniu!");
                 return;
             }
@@ -210,7 +244,8 @@ namespace Products_Management_ConsoleApp.Class
                 Console.WriteLine($"Adres: {nowe_zamowienie.DaneKupujacego.Adres}");
                 Console.WriteLine($"Sposob dostawy: {nowe_zamowienie.SposobDostawy}");
                 Console.WriteLine($"Sposob platnosci: {nowe_zamowienie.SposobPlatnosci}");
-                Console.WriteLine($"Kwota calkowita: {nowe_zamowienie.KwotaCalkowita}zł\n");
+                // Aktualizacja kwoty całkowitej po dodaniu produktu
+                nowe_zamowienie.Oblicz_Kwote_Calkowita();
                 Console.WriteLine($"Produkty w koszyku:");
                 foreach (Produkt produkt in nowe_zamowienie.Produkty)
                 {
@@ -236,27 +271,13 @@ namespace Products_Management_ConsoleApp.Class
 
                 if (decyzja == "t")
                 {
-                    Console.WriteLine("Obliczanie kwoty calkowitej...");
-                    nowe_zamowienie.Oblicz_Kwote_Calkowita();
 
-                    double cena = nowe_zamowienie.KwotaCalkowita;
-                    Console.WriteLine($"\nKwota calkowita zamowienia: {cena}zł");
-
-                    zamowienia.Add(nowe_zamowienie);
-                    string jsonZ = JsonSerializer.Serialize<List<Zamowienie>>(zamowienia);
-
-                    File.WriteAllText(pathZamowienia, jsonZ);
-                    Console.WriteLine("Zamowienie zostalo zlozone!\n");
-
-                    Console.WriteLine("Nacisnij dowolny klawisz, aby wrocic do menu");
-                    Console.ReadKey();
 
                     // Przerywa petle i wraca do menu glownego
                     Menu.StartMenu();
                 }
                 else
                 {
-                    Jesli_Blad();
                     Console.WriteLine("Zamowienie nie zostalo zlozone");
                 }
             }

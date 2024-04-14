@@ -28,18 +28,17 @@
         {
             double cena = 0;
             if (SposobDostawy == "kurier")
-            {
                 cena += 20;
-            }
+
             if (SposobPlatnosci == "karta")
-            {
                 cena += 2;
-            }
+
             foreach (Produkt p in Produkty)
             {
                 cena += p.Cena;
             }
-            KwotaCalkowita = Convert.ToDouble(cena);
+            KwotaCalkowita = Math.Round(cena, 2);
+            Console.WriteLine($"\nKwota całkowita zamówienia: {KwotaCalkowita}zł");
         }
     }
 

@@ -1,1 +1,1 @@
-[]
+[{"Id":1,"Produkty":[{"Id":5,"Nazwa":"Laptop","Cena":3999.99,"Kategoria":"Elektronika","Ilosc":0,"DataDostawy":"2024-04-04T10:00:00"}],"DaneKupujacego":{"Imie":"Nicola","Nazwisko":"Kaleta","Adres":"Lodz 4"},"SposobDostawy":"1","SposobPlatnosci":"1","KwotaCalkowita":0},{"Id":2,"Produkty":[{"Id":7,"Nazwa":"Chleb","Cena":5.99,"Kategoria":"Artyku\u0142y spo\u017Cywcze","Ilosc":0,"DataDostawy":"2024-04-05T08:00:00"}],"DaneKupujacego":{"Imie":"Nicola","Nazwisko":"Kaleta","Adres":"GLOWNO 44"},"SposobDostawy":"kurier","SposobPlatnosci":"gotowka","KwotaCalkowita":25.99}]
