@@ -2,29 +2,14 @@
 {
     internal class MenuTworzenieZamowienia
     {
-        static string[] pozycjeMenu = { "Dodaj produkt do zamowienia", "Wyswietl wszystkie produkty",
-                                            "Pokaz szczegoly zamowienia", "Zloz zamowienie"};
+        static string[] pozycjeMenu = [ "Dodaj produkt do zamowienia", "Wyswietl wszystkie produkty",
+                                            "Pokaz szczegoly zamowienia", "Zloz zamowienie"];
         static int aktywnaPozycjaMenu = 0;
 
-        public static void StartMenu()
+        public static void StartMenu(List<Produkt> produkty, Zamowienie nowe_zamowienie)
         {
             Console.Title = "Tworzenie Zamowienia Menu";
             Console.CursorVisible = false;
-
-            List<Produkt> produkty = new List<Produkt>();
-            List<Zamowienie> zamowienia = new List<Zamowienie>();
-            Klient klient = new Klient();
-            string sposobDostawy = "";
-            string sposobPlatnosci = "";
-
-            Zamowienie nowe_zamowienie = new Zamowienie(
-                id: zamowienia.Count + 1,
-                produkty: null,
-                daneKupujacego: klient,
-                sposobDostawy: sposobDostawy,
-                sposobPlatnosci: sposobPlatnosci,
-                kwotaCalkowita: 0
-            );
 
             while (true)
             {

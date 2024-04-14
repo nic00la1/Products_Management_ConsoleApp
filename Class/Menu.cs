@@ -2,16 +2,19 @@
 {
     internal class Menu
     {
-        public static void StartMenu(string[] pozycjeMenu, ref int aktywnaPozycjaMenu)
+        public static void StartMenu()
         {
             Console.Title = "Menu";
             Console.CursorVisible = false;
+
+            string[] pozycjeMenu = Program.GetMenuItems();
+            ref int aktywnaPozycjaMenu = ref Program.GetActiveMenuItem();
 
             while (true)
             {
                 PokazMenu(pozycjeMenu, aktywnaPozycjaMenu);
                 aktywnaPozycjaMenu = WybieranieOpcji(pozycjeMenu, aktywnaPozycjaMenu);
-                UruchomOpcje(aktywnaPozycjaMenu);
+                UruchomOpcje(pozycjeMenu, aktywnaPozycjaMenu);
             }
         }
 
@@ -67,7 +70,7 @@
             return aktywnaPozycjaMenu;
         }
 
-        static void UruchomOpcje(int aktywnaPozycjaMenu)
+        static void UruchomOpcje(string[] pozycjeMenu, int aktywnaPozycjaMenu)
         {
             switch (aktywnaPozycjaMenu)
             {
@@ -83,13 +86,6 @@
                     Environment.Exit(0);
                     break;
             }
-        }
-
-        static void OpcjaWBudowie()
-        {
-            Console.SetCursorPosition(12, 4);
-            Console.WriteLine("Opcja w budowie");
-            Console.ReadKey();
         }
     }
 }

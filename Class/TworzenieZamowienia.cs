@@ -78,7 +78,7 @@ namespace Products_Management_ConsoleApp.Class
 
                 while (true)
                 {
-                    MenuTworzenieZamowienia.StartMenu();
+                    MenuTworzenieZamowienia.StartMenu(produkty, nowe_zamowienie); // rozpocznij menu tworzenia zamowienia z listą produktów i obiektem zamówienia
                 }
 
             }
@@ -227,10 +227,6 @@ namespace Products_Management_ConsoleApp.Class
         {
             try
             {
-                Console.WriteLine(">>> Zloz zamowienie <<<\n");
-                Console.WriteLine("Czy na pewno chcesz zlozyc zamowienie? (t/n)");
-                string decyzja = Console.ReadLine();
-
                 // Jesli nie wybrano produktow to nie zlozy zamowienia
                 if (nowe_zamowienie.Produkty.Count == 0)
                 {
@@ -238,13 +234,25 @@ namespace Products_Management_ConsoleApp.Class
                     return;
                 }
 
-                string[] pozycjeMenu = { "Option 1", "Option 2", "Option 3" };
-                int aktywnaPozycjaMenu = 0;
+                Console.WriteLine(">>> Zloz zamowienie <<<\n");
+                Console.WriteLine("Czy na pewno chcesz zlozyc zamowienie? (t/n)");
+                string decyzja = Console.ReadLine();
 
                 if (decyzja == "t")
                 {
-                    // Przerywa petle i wraca do menu glownego
-                    Menu.StartMenu(pozycjeMenu, ref aktywnaPozycjaMenu);
+                    // Dodaj nowe zamówienie do listy wszystkich zamówień
+                    zamowienia.Add(nowe_zamowienie);
+
+                    // Zapisz listę wszystkich zamówień do pliku JSON
+                    string nowyJson = JsonSerializer.Serialize(zamowienia);
+                    File.WriteAllText(pathZamowienia, nowyJson);
+
+                    // Przerywa petle wraca do menu glownego i zapisuje zamowienie
+                    Console.WriteLine("Zamowienie zostalo zlozone! :) Dziękujemy za skorzystanie z naszych usług");
+                    Console.ReadKey();
+
+
+                    Menu.StartMenu();
                 }
                 else
                 {
