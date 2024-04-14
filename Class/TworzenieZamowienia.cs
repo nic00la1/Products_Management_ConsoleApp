@@ -1,4 +1,7 @@
-﻿using System.Text.Json;
+﻿using ConsoleTables;
+using System.Data;
+using System.Text;
+using System.Text.Json;
 
 namespace Products_Management_ConsoleApp.Class
 {
@@ -194,12 +197,41 @@ namespace Products_Management_ConsoleApp.Class
 
         public static void WyswietlWszystkieProdukty(List<Produkt> produkty)
         {
-            Console.Clear();
-            Console.WriteLine(">>> Lista produktow: <<<\n");
+            Console.OutputEncoding = Encoding.UTF8;
+            var tabela = TabelaWszystkieProdukty(produkty);
+            string[] nazwaKolumn = tabela.Columns.Cast<DataColumn>()
+                                    .Select(x => x.ColumnName)
+                                    .ToArray();
+
+            DataRow[] rows = tabela.Select();
+            Console.WriteLine(">>> Wszystkie produkty <<<\n");
+
+            var tableWyswietl = new ConsoleTable(nazwaKolumn);
+            foreach (DataRow row in rows)
+            {
+                tableWyswietl.AddRow(row.ItemArray);
+            }
+
+            tableWyswietl.Write(Format.Minimal);
+        }
+
+        public static DataTable TabelaWszystkieProdukty(List<Produkt> produkty)
+        {
+            var table = new DataTable();
+            table.Columns.Add("ID", typeof(int));
+            table.Columns.Add("Nazwa", typeof(string));
+            table.Columns.Add("Producent", typeof(string));
+            table.Columns.Add("Cena", typeof(double));
+            table.Columns.Add("Kategoria", typeof(string));
+            table.Columns.Add("Ilosc", typeof(int));
+            table.Columns.Add("Data dostawy", typeof(DateTime));
+
             foreach (Produkt produkt in produkty)
             {
-                Console.WriteLine($"{produkt.Nazwa} - {produkt.Cena}zł");
+                table.Rows.Add(produkt.Id, produkt.Nazwa, produkt.Producent, produkt.Cena, produkt.Kategoria, produkt.Ilosc, produkt.DataDostawy);
             }
+
+            return table;
         }
 
         public static void PokazSzczegolyZamowienia(Zamowienie nowe_zamowienie)

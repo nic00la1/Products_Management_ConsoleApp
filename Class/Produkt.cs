@@ -10,4 +10,5 @@
         public int Ilosc { get; set; }
         public DateTime DataDostawy { get; set; }
     }
+
 }
