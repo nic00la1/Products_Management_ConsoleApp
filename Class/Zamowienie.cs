@@ -38,7 +38,10 @@
                 cena += p.Cena;
             }
             KwotaCalkowita = Math.Round(cena, 2);
-            Console.WriteLine($"\nKwota całkowita zamówienia: {KwotaCalkowita}zł");
+            // Zmiana koloru na zielony i podkreslenie czcionki
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.WriteLine($"Kwota całkowita zamówienia: {KwotaCalkowita}zł");
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
         }
     }
 

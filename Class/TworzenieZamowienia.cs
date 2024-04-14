@@ -111,8 +111,7 @@ namespace Products_Management_ConsoleApp.Class
                     Console.WriteLine($" --- ID zamowienia: {zamowienie.Id} ---\n");
                     Console.WriteLine($"Klient: {zamowienie.DaneKupujacego.Imie} {zamowienie.DaneKupujacego.Nazwisko}");
                     Console.WriteLine($"Adres: {zamowienie.DaneKupujacego.Adres}");
-                    Console.WriteLine($"Sposob dostawy: {zamowienie.SposobDostawy}");
-                    Console.WriteLine($"Sposob platnosci: {zamowienie.SposobPlatnosci}");
+                    SposobyPlatnosciIDostawy(zamowienie);
                     double kwotaCalkowita = zamowienie.KwotaCalkowita;
 
                     // Dodajemy koszt dostawy jeśli wybrano kuriera
@@ -137,7 +136,7 @@ namespace Products_Management_ConsoleApp.Class
                         kwotaCalkowita += 0;
                     }
 
-                    Console.WriteLine($"Kwota calkowita: {kwotaCalkowita}zł\n");
+                    zamowienie.Oblicz_Kwote_Calkowita();
                     Console.WriteLine("Produkty w zamowieniu:");
                     foreach (Produkt produkt in zamowienie.Produkty)
                     {
@@ -209,11 +208,12 @@ namespace Products_Management_ConsoleApp.Class
                 Console.WriteLine($"Zamowienie z dnia {DateTime.Now} ---> ID: {nowe_zamowienie.Id}\n");
                 Console.WriteLine($"Klient: {nowe_zamowienie.DaneKupujacego.Imie} {nowe_zamowienie.DaneKupujacego.Nazwisko}");
                 Console.WriteLine($"Adres: {nowe_zamowienie.DaneKupujacego.Adres}");
-                Console.WriteLine($"Sposob dostawy: {nowe_zamowienie.SposobDostawy}");
-                Console.WriteLine($"Sposob platnosci: {nowe_zamowienie.SposobPlatnosci}");
+                SposobyPlatnosciIDostawy(nowe_zamowienie);
+
+
                 // Aktualizacja kwoty całkowitej po dodaniu produktu
                 nowe_zamowienie.Oblicz_Kwote_Calkowita();
-                Console.WriteLine($"Produkty w koszyku:");
+                Console.WriteLine($"\nProdukty w koszyku:");
                 foreach (Produkt produkt in nowe_zamowienie.Produkty)
                 {
                     Console.WriteLine($"{produkt.Nazwa} - {produkt.Cena}zł");
@@ -302,6 +302,29 @@ namespace Products_Management_ConsoleApp.Class
                 {
                     return options[selected].Split(' ')[1]; // Extracting the value from the selected option
                 }
+            }
+        }
+
+        private static void SposobyPlatnosciIDostawy(Zamowienie nowe_zamowienie)
+        {
+            // Wyswietlanie ceny dostawy
+            if (nowe_zamowienie.SposobDostawy == "kurier")
+            {
+                Console.WriteLine("Sposob dostawy - kurier (20zł)");
+            }
+            else
+            {
+                Console.WriteLine("Sposob dostawy - odbiór osobisty (0zł)");
+            }
+
+            // Wyswietlanie ceny platnosci
+            if (nowe_zamowienie.SposobPlatnosci == "karta")
+            {
+                Console.WriteLine("Sposob platnosci - karta (2zł)");
+            }
+            else
+            {
+                Console.WriteLine("Sposob płatnosci - gotowka (0zł)");
             }
         }
 
