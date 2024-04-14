@@ -78,40 +78,9 @@ namespace Products_Management_ConsoleApp.Class
 
                 while (true)
                 {
-                    // dodanie produktow do zamowienia
-                    Console.Clear();
-                    Console.WriteLine("Wybierz akcje zamowienia: ");
-                    // Tymczasowo bedzie menu plaskie
-                    Console.WriteLine("1. Dodaj produkt do zamowienia");
-                    Console.WriteLine("2. Wyswietl wszystkie produkty");
-                    Console.WriteLine("3. Pokaz Szczegoly Zamowienia");
-                    Console.WriteLine("4. Zloz zamowienie");
-
-                    string akcja = Console.ReadLine();
-
-                    switch (akcja)
-                    {
-                        case "1":
-                            DodajProduktDoZamowienia(produkty, nowe_zamowienie);
-                            break;
-
-                        case "2":
-                            WyswietlWszystkieProdukty(produkty);
-                            break;
-
-                        case "3":
-                            PokazSzczegolyZamowienia(nowe_zamowienie);
-                            break;
-                        case "4":
-                            ZlozZamowienie(nowe_zamowienie);
-                            break;
-                        default:
-                            Console.WriteLine("Nie ma takiej opcji");
-                            break;
-                    }
-
-                    Console.ReadKey();
+                    MenuTworzenieZamowienia.StartMenu();
                 }
+
             }
             catch (Exception ex)
             {
@@ -189,7 +158,7 @@ namespace Products_Management_ConsoleApp.Class
             }
         }
 
-        private static void DodajProduktDoZamowienia(List<Produkt> produkty, Zamowienie nowe_zamowienie)
+        public static void DodajProduktDoZamowienia(List<Produkt> produkty, Zamowienie nowe_zamowienie)
         {
             Console.Clear();
             Console.WriteLine(">>> Dodaj produkt do zamowienia <<<\n");
@@ -217,7 +186,7 @@ namespace Products_Management_ConsoleApp.Class
 
         }
 
-        private static void WyswietlWszystkieProdukty(List<Produkt> produkty)
+        public static void WyswietlWszystkieProdukty(List<Produkt> produkty)
         {
             Console.Clear();
             Console.WriteLine(">>> Lista produktow: <<<\n");
@@ -227,7 +196,7 @@ namespace Products_Management_ConsoleApp.Class
             }
         }
 
-        private static void PokazSzczegolyZamowienia(Zamowienie nowe_zamowienie)
+        public static void PokazSzczegolyZamowienia(Zamowienie nowe_zamowienie)
         {
             // Jesli nie ma produktow w zamowieniu
             if (nowe_zamowienie.Produkty.Count == 0)
@@ -254,7 +223,7 @@ namespace Products_Management_ConsoleApp.Class
             }
         }
 
-        private static void ZlozZamowienie(Zamowienie nowe_zamowienie)
+        public static void ZlozZamowienie(Zamowienie nowe_zamowienie)
         {
             try
             {
@@ -269,12 +238,13 @@ namespace Products_Management_ConsoleApp.Class
                     return;
                 }
 
+                string[] pozycjeMenu = { "Option 1", "Option 2", "Option 3" };
+                int aktywnaPozycjaMenu = 0;
+
                 if (decyzja == "t")
                 {
-
-
                     // Przerywa petle i wraca do menu glownego
-                    Menu.StartMenu();
+                    Menu.StartMenu(pozycjeMenu, ref aktywnaPozycjaMenu);
                 }
                 else
                 {

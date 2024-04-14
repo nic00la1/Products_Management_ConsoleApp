@@ -2,24 +2,20 @@
 {
     internal class Menu
     {
-        static string[] pozycjeMenu = { "Utworz zamowienie", "Wyswietl Zamowienia",
-                                        "Koniec"};
-        static int aktywnaPozycjaMenu = 0;
-
-        public static void StartMenu()
+        public static void StartMenu(string[] pozycjeMenu, ref int aktywnaPozycjaMenu)
         {
             Console.Title = "Menu";
             Console.CursorVisible = false;
 
             while (true)
             {
-                PokazMenu();
-                WybieranieOpcji();
-                UruchomOpcje();
+                PokazMenu(pozycjeMenu, aktywnaPozycjaMenu);
+                aktywnaPozycjaMenu = WybieranieOpcji(pozycjeMenu, aktywnaPozycjaMenu);
+                UruchomOpcje(aktywnaPozycjaMenu);
             }
         }
 
-        static void PokazMenu()
+        public static void PokazMenu(string[] pozycjeMenu, int aktywnaPozycjaMenu)
         {
             Console.BackgroundColor = ConsoleColor.Gray;
             Console.Clear();
@@ -39,12 +35,11 @@
                 else
                 {
                     Console.WriteLine(pozycjeMenu[i]);
-
                 }
             }
         }
 
-        static void WybieranieOpcji()
+        public static int WybieranieOpcji(string[] pozycjeMenu, int aktywnaPozycjaMenu)
         {
             do
             {
@@ -52,12 +47,12 @@
                 if (klawisz.Key == ConsoleKey.UpArrow) // strzalka w gore
                 {
                     aktywnaPozycjaMenu = (aktywnaPozycjaMenu > 0) ? aktywnaPozycjaMenu - 1 : pozycjeMenu.Length - 1;
-                    PokazMenu();
+                    PokazMenu(pozycjeMenu, aktywnaPozycjaMenu);
                 }
                 else if (klawisz.Key == ConsoleKey.DownArrow) // strzalka w dol
                 {
                     aktywnaPozycjaMenu = (aktywnaPozycjaMenu + 1) % pozycjeMenu.Length;
-                    PokazMenu();
+                    PokazMenu(pozycjeMenu, aktywnaPozycjaMenu);
                 }
                 else if (klawisz.Key == ConsoleKey.Escape) // Koniec
                 {
@@ -68,9 +63,11 @@
                     break;
 
             } while (true);
+
+            return aktywnaPozycjaMenu;
         }
 
-        static void UruchomOpcje()
+        static void UruchomOpcje(int aktywnaPozycjaMenu)
         {
             switch (aktywnaPozycjaMenu)
             {

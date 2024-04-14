@@ -6,7 +6,10 @@ namespace Products_Management_ConsoleApp
     {
         static void Main(string[] args)
         {
-            Menu.StartMenu();
+            string[] pozycjeMenu = { "Utworz nowe zamowienie", "Wyswietl wszystkie zamowienia", "Koniec" };
+            int aktywnaPozycjaMenu = 0; // start with the first menu option
+
+            Menu.StartMenu(pozycjeMenu, ref aktywnaPozycjaMenu);
         }
     }
 }
