@@ -138,9 +138,9 @@ namespace Products_Management_ConsoleApp.Class
 
                     zamowienie.Oblicz_Kwote_Calkowita();
                     Console.WriteLine("Produkty w zamowieniu:");
-                    foreach (Produkt produkt in zamowienie.Produkty)
+                    foreach (ProduktZamowienia produktZamowienia in zamowienie.Produkty)
                     {
-                        Console.WriteLine($"{produkt.Nazwa} - {produkt.Cena}zł");
+                        Console.WriteLine($"{produktZamowienia.Produkt.Nazwa} - {produktZamowienia.Produkt.Cena}zł x {produktZamowienia.Ilosc}");
                     }
 
                     Console.WriteLine("====================================");
@@ -168,7 +168,17 @@ namespace Products_Management_ConsoleApp.Class
             {
                 if (tymczasowa_nazwa == produkt.Nazwa) // sprawdzenie czy produkt istnieje
                 {
-                    nowe_zamowienie.DodajProdukt(produkt);
+                    Console.WriteLine("Podaj ilosc produktu");
+                    string iloscString = Console.ReadLine();
+                    int ilosc;
+
+                    if (string.IsNullOrEmpty(iloscString) || !int.TryParse(iloscString, out ilosc) || ilosc <= 0)
+                    {
+                        Console.WriteLine("Podaj prawidlowa ilosc produktu!");
+                        return;
+                    }
+
+                    nowe_zamowienie.DodajProdukt(produkt, ilosc);
                     tymczasowa_nazwa = ""; // reset nazwy
                     produktZnaleziony = true; // ustawienie flagi na true
                     Console.WriteLine("Dodano produkt do zamowienia");
@@ -180,7 +190,6 @@ namespace Products_Management_ConsoleApp.Class
             {
                 Console.WriteLine("Nie ma takiego produktu!");
             }
-
         }
 
         public static void WyswietlWszystkieProdukty(List<Produkt> produkty)
@@ -214,9 +223,9 @@ namespace Products_Management_ConsoleApp.Class
                 // Aktualizacja kwoty całkowitej po dodaniu produktu
                 nowe_zamowienie.Oblicz_Kwote_Calkowita();
                 Console.WriteLine($"\nProdukty w koszyku:");
-                foreach (Produkt produkt in nowe_zamowienie.Produkty)
+                foreach (ProduktZamowienia produktZamowienia in nowe_zamowienie.Produkty)
                 {
-                    Console.WriteLine($"{produkt.Nazwa} - {produkt.Cena}zł");
+                    Console.WriteLine($"{produktZamowienia.Produkt.Nazwa} - {produktZamowienia.Produkt.Cena}zł x {produktZamowienia.Ilosc}");
                 }
             }
         }
